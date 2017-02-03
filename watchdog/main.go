@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -44,6 +45,7 @@ func makeRequestHandler(config *WatchdogConfig) func(http.ResponseWriter, *http.
 				w.WriteHeader(500)
 				response := bytes.NewBufferString(err.Error())
 				w.Write(response.Bytes())
+
 				return
 			}
 			if config.writeDebug == true {
@@ -56,6 +58,15 @@ func makeRequestHandler(config *WatchdogConfig) func(http.ResponseWriter, *http.
 			}
 			w.WriteHeader(200)
 			w.Write(out)
+
+			if config.oneShot == true {
+				go func(exitCode int) {
+					fmt.Println("sleeping..")
+					time.Sleep(500 * time.Millisecond)
+					fmt.Println("closing..")
+					os.Exit(exitCode)
+				}(0)
+			}
 		} else {
 			w.WriteHeader(http.StatusMethodNotAllowed)
 		}

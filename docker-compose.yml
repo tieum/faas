@@ -131,7 +131,7 @@ services:
     alexacolorchange:
         labels:
             function: "true"
-        image: alexellis2/faas-alexachangecolorintent 
+        image: alexellis2/faas-alexachangecolorintent:latest-dev1
         depends_on:
             - gateway
         networks:

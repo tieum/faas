@@ -57,6 +57,8 @@ func (ReadConfig) Read(hasEnv HasEnv) WatchdogConfig {
 
 	cfg.writeDebug = parseBoolValue(hasEnv.Getenv("write_debug"))
 
+	cfg.oneShot = parseBoolValue(hasEnv.Getenv("one_shot"))
+
 	return cfg
 }
 
@@ -69,4 +71,5 @@ type WatchdogConfig struct {
 
 	// writeDebug write console stdout statements to the container
 	writeDebug bool
+	oneShot    bool
 }
