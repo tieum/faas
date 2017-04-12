@@ -1,0 +1,5 @@
+FROM quay.io/prometheus/alertmanager
+
+COPY prometheus/alertmanager.yml /alertmanager.yml
+
+CMD ["-config.file=/alertmanager.yml"]

@@ -1,0 +1,9 @@
+FROM quay.io/prometheus/prometheus:latest
+
+RUN rm -rf /etc/prometheus/prometheus.yml
+COPY ./prometheus/prometheus.yml /etc/prometheus/prometheus.yml
+COPY ./prometheus/alert.rules /etc/prometheus/alert.rules
+
+RUN mkdir -p /prometheus
+
+CMD ["-config.file=/etc/prometheus/prometheus.yml", "-storage.local.path=/prometheus", "-storage.local.memory-chunks=10000", "--alertmanager.url=http://alertmanager:9093"]
