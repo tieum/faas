@@ -1,0 +1,43 @@
+#%RAML 1.0
+title: Admin API for FaaS functions
+
+/system/functions:
+  get: # HTTP method declaration
+    responses: # declare a response
+      200: # HTTP status code
+        body: # declare content of response
+          application/json: # media type
+            example: | 
+              [
+                {"name":"func_payroll","image":"alexellis2/faas-payroll:latest@sha256:0bc2773613c76d9ee4906bf3887ea2527f135cb7a0d0f430743e7c6712949709","invocationCount":16,"replicas":1},
+                {"name":"func_myassistant","image":"alexellis2/faas-myassistant:19-4-2017@sha256:6515ec38c901368061f93b94202989dfac56c65411ca2c7939606c92fcd441ab","invocationCount":47,"replicas":1},
+                {"name":"func_getavatar","image":"alexellis2/getavatar:18-04-2017@sha256:cb0a2d9dcbccb5d7d59f90ac0e63669c7a31ffb9b3841cfc567d1eac61966143","invocationCount":1124,"replicas":1},
+                {"name":"func_echoit","image":"functions/alpine:health@sha256:52e6e83add2caafc014d9f14984781c91d0d36c7d13829a7ccec480f2e395d19","invocationCount":56521,"replicas":1},
+                {"name":"func_markdown","image":"alexellis2/faas-markdownrender:latest@sha256:c1b0245042afe172c693f725100c6e8a5078a9272017dc92e404f47d8010ee62","invocationCount":4,"replicas":1},
+                {"name":"ifttt","image":"functions/alpine:health@sha256:52e6e83add2caafc014d9f14984781c91d0d36c7d13829a7ccec480f2e395d19","invocationCount":13,"replicas":1},
+                {"name":"func_mobymingle","image":"functions/mobymingle:18-04-2017@sha256:330ad159e05a4b6b05d55a97d4512e64a5c5469959c8033f9cb4da02cddf561b","invocationCount":8,"replicas":1},
+                {"name":"func_fanclub","image":"alexellis2/fanclub:18-04-2017@sha256:37bb3fabee7e36abab7e6250bb7d13c9ab66e983782b35200470fe2a3aa14daa","invocationCount":1125,"replicas":1}
+              ]
+/system/functions:
+  post: # HTTP method declaration
+    responses: # declare a response
+      200: # HTTP status code
+        body: # declare content of response
+          application/json: # media type
+            example: |
+              { 
+              "service": "resizer",
+              "image": "functions/resizer",
+              "envProcess": "convert - -resize 50% fd:1",
+              "network": "func_functions"
+              }
+/system/functions:
+  delete: # HTTP method declaration
+    responses: # declare a response
+      200: # HTTP status code
+        body: # declare content of response
+          application/json: # media type
+            example: |
+              { 
+              "functionName": "resizer"
+              }
