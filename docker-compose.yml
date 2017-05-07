@@ -1,4 +1,11 @@
-version: "3"
+version: "3.1"
+secrets:
+    prometheus.yml:
+          external: true
+    alert.rules:
+          external: true
+    alertmanager.yml:
+          external: true
 services:
 
 # Core API services are pinned, HA is provided for functions.
@@ -15,14 +22,14 @@ services:
         deploy:
             placement:
                 constraints: [node.role == manager]
- 
-    prometheus:
-        image: functions/prometheus:1.5.2 # Mirrors version 1.5.2 of quay.io/prometheus/prometheus:latest
-        volumes:
-            - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
-            - ./prometheus/alert.rules:/etc/prometheus/alert.rules
 
-        command: "-config.file=/etc/prometheus/prometheus.yml -storage.local.path=/prometheus -storage.local.memory-chunks=10000 --alertmanager.url=http://alertmanager:9093"
+    prometheus:
+        secrets:
+          - prometheus.yml
+          - alert.rules
+        image: functions/prometheus:1.5.2 # Mirrors version 1.5.2 of quay.io/prometheus/prometheus:latest
+
+        command: "-config.file=/run/secrets/prometheus.yml -storage.local.path=/prometheus -storage.local.memory-chunks=10000 --alertmanager.url=http://alertmanager:9093"
         ports:
             - 9090:9090
         depends_on:
@@ -37,13 +44,13 @@ services:
                 constraints: [node.role == manager]
 
     alertmanager:
+        secrets:
+          - alertmanager.yml
         image: quay.io/prometheus/alertmanager
         environment:
             no_proxy: "gateway"
-        volumes:
-            - ./prometheus/alertmanager.yml:/alertmanager.yml
         command:
-            - '-config.file=/alertmanager.yml'
+            - '-config.file=/run/secrets/alertmanager.yml'
         networks:
             - functions
         ports:
