@@ -5,10 +5,15 @@ package requests
 
 // CreateFunctionRequest create a function in the swarm.
 type CreateFunctionRequest struct {
-	Service    string `json:"service"`
-	Image      string `json:"image"`
-	Network    string `json:"network"`
+	Service string `json:"service"`
+	Image   string `json:"image"`
+	Network string `json:"network"`
+
+	// EnvProcess corresponds to the fprocess variable for your container watchdog.
 	EnvProcess string `json:"envProcess"`
+
+	// EnvVars provides overrides for functions.
+	EnvVars map[string]string `json:"envVars"`
 }
 
 type DeleteFunctionRequest struct {
